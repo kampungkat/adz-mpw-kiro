@@ -1,0 +1,7 @@
+streamlit
+openai
+python-dotenv
+pandas
+io
+os
+python>=3.9
