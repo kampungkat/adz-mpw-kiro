@@ -3,5 +3,4 @@ openai
 python-dotenv
 pandas
 openpyxl
-os
 python>=3.9
