@@ -9,7 +9,7 @@ from dotenv import load_dotenv
 # Load environment variables from .env file
 load_dotenv()
 # openai.api_key = os.getenv("OPENAI_API_KEY")
-openai.api_key = st.secrets("OPENAI_API_KEY")
+openai.api_key = st.secrets["OPENAI_API_KEY"]
 
 # Load rate card and site list
 excel_path = "adzymic_rate_card.xlsx"
