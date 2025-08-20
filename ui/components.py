@@ -347,6 +347,32 @@ class MediaPlannerForm:
         
         return errors
     
+    def _display_validation_errors(self, validation_errors: Dict[str, str]):
+        """
+        Display validation errors in a user-friendly format.
+        
+        Args:
+            validation_errors: Dictionary of field names to error messages
+        """
+        if not validation_errors:
+            return
+        
+        st.error("❌ **Please fix the following errors:**")
+        
+        for field, error_message in validation_errors.items():
+            # Create user-friendly field names
+            field_display_names = {
+                'brand_name': 'Brand/Advertiser Name',
+                'budget': 'Campaign Budget',
+                'country': 'Target Country',
+                'start_date': 'Campaign Start Date',
+                'end_date': 'Campaign End Date',
+                'objective': 'Campaign Objective'
+            }
+            
+            display_name = field_display_names.get(field, field.replace('_', ' ').title())
+            st.write(f"• **{display_name}**: {error_message}")
+    
     def _get_budget_suggestions(self, budget: float, country: str) -> Dict[str, str]:
         """
         Get budget-specific suggestions and warnings for a market.
