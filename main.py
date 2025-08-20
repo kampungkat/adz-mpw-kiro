@@ -215,11 +215,30 @@ def main():
             
             # Generate AI-powered media plans
             if st.button("🚀 Generate AI Media Plans", type="primary", use_container_width=True):
+                st.write("🔍 **Debug: Button clicked!**")
+                
+                # Check OpenAI API key first
+                openai_key = os.getenv('OPENAI_API_KEY')
+                if not openai_key:
+                    st.error("❌ **OpenAI API Key Missing**")
+                    st.error("Please configure your OpenAI API key in Streamlit Cloud secrets.")
+                    with st.expander("🔧 How to Add OpenAI API Key"):
+                        st.write("1. Go to your Streamlit Cloud app settings")
+                        st.write("2. Click on 'Secrets'")
+                        st.write("3. Add: `OPENAI_API_KEY = \"your-api-key-here\"`")
+                        st.write("4. Save and restart the app")
+                    st.stop()
+                else:
+                    st.success(f"✅ OpenAI API key found (ends with: ...{openai_key[-4:]})")
+                
                 with st.spinner("🤖 AI is generating your media plans..."):
                     try:
+                        st.write("🔍 **Debug: Initializing controller...**")
                         # Initialize the media plan controller
                         controller = MediaPlanController(data_manager)
+                        st.write("✅ Controller initialized")
                         
+                        st.write("🔍 **Debug: Creating client brief...**")
                         # Create client brief from form data
                         client_brief = ClientBrief(
                             brand_name=form_data['brand_name'],
@@ -230,9 +249,12 @@ def main():
                             planning_mode=form_data['planning_mode'],
                             selected_formats=format_data.get('selected_formats') if form_data['planning_mode'] == 'Manual' else None
                         )
+                        st.write(f"✅ Client brief created for {client_brief.brand_name}")
                         
+                        st.write("🔍 **Debug: Generating plans...**")
                         # Generate media plans
                         plans = controller.generate_media_plans(client_brief)
+                        st.write(f"🔍 **Debug: Generated {len(plans) if plans else 0} plans**")
                         
                         if plans:
                             st.success(f"✅ Generated {len(plans)} media plan options!")
@@ -241,12 +263,27 @@ def main():
                             st.session_state['generated_plans'] = plans
                             st.session_state['client_brief'] = client_brief
                             
+                            st.write("🔍 **Debug: Displaying plans...**")
                             # Display the plans
                             display_component = PlanDisplayComponent()
                             display_component.render_plan_comparison(plans, client_brief)
+                            st.write("✅ Plans displayed")
                             
                         else:
-                            st.error("❌ Failed to generate media plans. Please try again or contact support.")
+                            st.error("❌ Failed to generate media plans. No plans returned.")
+                            st.write("🔍 **Debug: Plans variable is empty or None**")
+                            
+                            # Show what we can about the client brief for debugging
+                            with st.expander("🔍 Debug: Client Brief Details"):
+                                st.json({
+                                    'brand_name': client_brief.brand_name,
+                                    'budget': client_brief.budget,
+                                    'country': client_brief.country,
+                                    'campaign_period': client_brief.campaign_period,
+                                    'objective': client_brief.objective,
+                                    'planning_mode': client_brief.planning_mode,
+                                    'selected_formats': client_brief.selected_formats
+                                })
                             
                     except Exception as e:
                         st.error(f"❌ Error generating plans: {str(e)}")
