@@ -70,23 +70,45 @@ def main():
     try:
         data_manager = DataManager(cache_ttl_hours=config.cache_timeout_hours)
         
-        # Validate data availability
-        validation_result = data_manager.validate_data_freshness()
+        # Try to actually load the data instead of just checking cache
+        data_load_success = True
+        load_errors = []
         
-        if validation_result['overall_status'] == 'incomplete':
-            st.error("❌ **Required Data Files Missing**")
-            st.error("The application requires rate card and site list files to function properly.")
+        try:
+            # Attempt to load rate card data
+            rate_data = data_manager.load_rate_cards()
+            st.success(f"✅ Rate card loaded successfully! Found {len(rate_data.get('markets', []))} markets")
+        except Exception as e:
+            data_load_success = False
+            load_errors.append(f"Rate card loading failed: {str(e)}")
+        
+        try:
+            # Attempt to load site list data
+            site_data = data_manager.load_site_lists()
+            st.success(f"✅ Site list loaded successfully! Found {len(site_data.get('markets', {}))} markets")
+        except Exception as e:
+            data_load_success = False
+            load_errors.append(f"Site list loading failed: {str(e)}")
+        
+        # If data loading failed, show detailed error information
+        if not data_load_success:
+            st.error("❌ **Data Loading Failed**")
+            st.error("The application could not load the required data files.")
             
-            with st.expander("📋 Required Files and Setup Instructions"):
-                st.write("**Missing Files:**")
+            with st.expander("📋 Error Details and Setup Instructions"):
+                st.write("**Loading Errors:**")
+                for error in load_errors:
+                    st.write(f"• {error}")
+                st.write("")
+                st.write("**Required Files:**")
                 st.write("• `adzymic_rate_card.xlsx` - Contains CPM pricing data for different markets and ad formats")
                 st.write("• `APX Sitelist - Regional.xlsx` - Contains site categorization and availability by market")
                 st.write("")
                 st.write("**Setup Instructions:**")
-                st.write("1. Obtain the latest rate card and site list files from Adzymic")
-                st.write("2. Place files in the application root directory")
-                st.write("3. Ensure files are in Excel format (.xlsx or .xls)")
-                st.write("4. Restart the application")
+                st.write("1. Ensure files are in Excel format (.xlsx or .xls)")
+                st.write("2. Check that files are not password protected")
+                st.write("3. Verify file structure matches expected format")
+                st.write("4. Try re-uploading files if they appear corrupted")
                 st.write("")
                 st.write("**File Format Requirements:**")
                 st.write("• Rate card: Market codes as columns, ad format names as rows, CPM values in cells")
