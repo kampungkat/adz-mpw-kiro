@@ -373,6 +373,38 @@ class MediaPlannerForm:
             display_name = field_display_names.get(field, field.replace('_', ' ').title())
             st.write(f"• **{display_name}**: {error_message}")
     
+    def _display_budget_validation(self, budget: float, country: str):
+        """
+        Display real-time budget validation and suggestions.
+        
+        Args:
+            budget: Campaign budget amount
+            country: Target country/market
+        """
+        if budget <= 0:
+            return
+        
+        try:
+            # Get budget suggestions and warnings
+            suggestions = self._get_budget_suggestions(budget, country)
+            
+            if suggestions.get('status') == 'low':
+                st.warning(f"💡 **Budget Suggestion**: {suggestions.get('message', '')}")
+            elif suggestions.get('status') == 'optimal':
+                st.success(f"✅ **Budget Status**: {suggestions.get('message', '')}")
+            elif suggestions.get('status') == 'high':
+                st.info(f"💰 **Budget Status**: {suggestions.get('message', '')}")
+            
+            # Show format recommendations if available
+            if suggestions.get('recommended_formats'):
+                with st.expander("💡 Recommended Ad Formats for Your Budget"):
+                    for format_info in suggestions['recommended_formats']:
+                        st.write(f"• **{format_info['name']}**: {format_info['description']}")
+                        
+        except Exception as e:
+            # Silently handle errors in budget validation to not break the form
+            logger.warning(f"Error in budget validation display: {str(e)}")
+    
     def _get_budget_suggestions(self, budget: float, country: str) -> Dict[str, str]:
         """
         Get budget-specific suggestions and warnings for a market.
