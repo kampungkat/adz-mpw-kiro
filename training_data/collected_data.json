@@ -1,0 +1,35 @@
+[
+  {
+    "campaign_brief": "Brand: TechCorp\nBudget: $75,000.00\nMarket: US\nCampaign Period: Q1 2024\nObjective: Brand Awareness\nPlanning Mode: AI",
+    "generated_plan": "Title: Multi-Channel Reach Strategy\nRationale: Balanced approach focusing on reach across multiple touchpoints. Display provides broad awareness, video delivers engaging brand story, and native ensures organic integration.\nTotal Budget: $74,500.00\nEstimated Reach: 5,500,000\nEstimated Impressions: 11,673,611\n\nAllocations:\n  - Format: Display Banner\n    Budget: $35,000.00\n    CPM: $4.50\n    Impressions: 7,777,778\n    Sites: cnn.com, bbc.com, reuters.com\n    Notes: High-visibility news sites for brand awareness\n  - Format: Video Pre-roll\n    Budget: $25,000.00\n    CPM: $12.00\n    Impressions: 2,083,333\n    Sites: youtube.com, vimeo.com\n    Notes: Engaging video content for brand storytelling\n  - Format: Native Advertising\n    Budget: $14,500.00\n    CPM: $8.00\n    Impressions: 1,812,500\n    Sites: buzzfeed.com, mashable.com\n    Notes: Native content for organic engagement",
+    "performance_metrics": {
+      "ctr": 0.045,
+      "conversion_rate": 0.025,
+      "brand_lift": 0.15
+    },
+    "created_at": "2025-08-20T20:16:17.832948",
+    "validated": true
+  },
+  {
+    "campaign_brief": "Brand: FashionBrand\nBudget: $50,000.00\nMarket: US\nCampaign Period: Q2 2024\nObjective: Sales Conversion\nPlanning Mode: AI",
+    "generated_plan": "Title: Conversion-Focused Strategy\nRationale: Conversion-optimized strategy prioritizing high-intent channels. Search ads capture immediate purchase intent while social ads build consideration among target demographics.\nTotal Budget: $49,800.00\nEstimated Reach: 3,200,000\nEstimated Impressions: 5,046,154\n\nAllocations:\n  - Format: Search Ads\n    Budget: $30,000.00\n    CPM: $15.00\n    Impressions: 2,000,000\n    Sites: google.com, bing.com\n    Notes: High-intent search targeting for immediate conversions\n  - Format: Social Media Ads\n    Budget: $19,800.00\n    CPM: $6.50\n    Impressions: 3,046,154\n    Sites: facebook.com, instagram.com\n    Notes: Social targeting for fashion-conscious demographics",
+    "performance_metrics": {
+      "ctr": 0.065,
+      "conversion_rate": 0.045,
+      "roas": 4.2
+    },
+    "created_at": "2025-08-20T20:16:17.833389",
+    "validated": true
+  },
+  {
+    "campaign_brief": "Brand: HealthTech\nBudget: $100,000.00\nMarket: US\nCampaign Period: Q3 2024\nObjective: Lead Generation\nPlanning Mode: AI",
+    "generated_plan": "Title: B2B Lead Generation Strategy\nRationale: B2B focused strategy leveraging professional networks and industry publications. LinkedIn provides precise professional targeting, industry publications offer credibility, and webinar sponsorships establish thought leadership.\nTotal Budget: $98,500.00\nEstimated Reach: 2,800,000\nEstimated Impressions: 4,114,444\n\nAllocations:\n  - Format: LinkedIn Sponsored Content\n    Budget: $45,000.00\n    CPM: $25.00\n    Impressions: 1,800,000\n    Sites: linkedin.com\n    Notes: Professional targeting for B2B healthcare decision makers\n  - Format: Industry Publication Ads\n    Budget: $35,000.00\n    CPM: $18.00\n    Impressions: 1,944,444\n    Sites: healthcareit.com, modernhealthcare.com\n    Notes: Industry-specific publications for credibility and reach\n  - Format: Webinar Sponsorships\n    Budget: $18,500.00\n    CPM: $50.00\n    Impressions: 370,000\n    Sites: webinar-platforms.com\n    Notes: Educational content sponsorships for thought leadership",
+    "performance_metrics": {
+      "ctr": 0.035,
+      "lead_conversion_rate": 0.08,
+      "cost_per_lead": 125.0
+    },
+    "created_at": "2025-08-20T20:16:17.833737",
+    "validated": true
+  }
+]
