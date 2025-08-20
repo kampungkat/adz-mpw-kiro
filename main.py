@@ -212,9 +212,14 @@ def main():
             # Store validated data in session state for next steps
             st.session_state['validated_form_data'] = form_data
             st.session_state['validated_format_data'] = format_data
-            
-            # Generate AI-powered media plans
-            if st.button("🚀 Generate AI Media Plans", type="primary", use_container_width=True):
+            st.session_state['ready_for_generation'] = True
+
+    # Generate AI-powered media plans (outside form context)
+    if st.session_state.get('ready_for_generation', False):
+        st.divider()
+        st.subheader("🚀 Generate Your Media Plans")
+        
+        if st.button("🚀 Generate AI Media Plans", type="primary", use_container_width=True):
                 st.write("🔍 **Debug: Button clicked!**")
                 
                 # Check OpenAI API key first
@@ -239,15 +244,19 @@ def main():
                         st.write("✅ Controller initialized")
                         
                         st.write("🔍 **Debug: Creating client brief...**")
+                        # Get validated data from session state
+                        validated_form_data = st.session_state.get('validated_form_data', {})
+                        validated_format_data = st.session_state.get('validated_format_data', {})
+                        
                         # Create client brief from form data
                         client_brief = ClientBrief(
-                            brand_name=form_data['brand_name'],
-                            budget=form_data['budget'],
-                            country=form_data['country'],
-                            campaign_period=f"{form_data['start_date']} to {form_data['end_date']}",
-                            objective=form_data['objective'],
-                            planning_mode=form_data['planning_mode'],
-                            selected_formats=format_data.get('selected_formats') if form_data['planning_mode'] == 'Manual' else None
+                            brand_name=validated_form_data['brand_name'],
+                            budget=validated_form_data['budget'],
+                            country=validated_form_data['country'],
+                            campaign_period=f"{validated_form_data['start_date']} to {validated_form_data['end_date']}",
+                            objective=validated_form_data['objective'],
+                            planning_mode=validated_form_data['planning_mode'],
+                            selected_formats=validated_format_data.get('selected_formats') if validated_form_data['planning_mode'] == 'Manual' else None
                         )
                         st.write(f"✅ Client brief created for {client_brief.brand_name}")
                         
