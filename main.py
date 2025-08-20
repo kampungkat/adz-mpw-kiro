@@ -262,11 +262,19 @@ def main():
                         
                         st.write("🔍 **Debug: Generating plans...**")
                         # Generate media plans
-                        plans = controller.generate_media_plans(client_brief)
-                        st.write(f"🔍 **Debug: Generated {len(plans) if plans else 0} plans**")
+                        success, plans, status_message, notification = controller.generate_plans(client_brief)
+                        st.write(f"🔍 **Debug: Success: {success}, Plans: {len(plans) if plans else 0}**")
+                        st.write(f"🔍 **Debug: Status: {status_message}**")
                         
-                        if plans:
-                            st.success(f"✅ Generated {len(plans)} media plan options!")
+                        if success and plans:
+                            st.success(f"✅ {status_message}")
+                            
+                            # Show notification if present
+                            if notification:
+                                if notification.get('type') == 'warning':
+                                    st.warning(f"⚠️ {notification.get('message', '')}")
+                                elif notification.get('type') == 'info':
+                                    st.info(f"ℹ️ {notification.get('message', '')}")
                             
                             # Store plans in session state
                             st.session_state['generated_plans'] = plans
@@ -279,8 +287,15 @@ def main():
                             st.write("✅ Plans displayed")
                             
                         else:
-                            st.error("❌ Failed to generate media plans. No plans returned.")
-                            st.write("🔍 **Debug: Plans variable is empty or None**")
+                            st.error(f"❌ {status_message}")
+                            
+                            # Show notification with additional details
+                            if notification:
+                                with st.expander("🔧 Additional Information"):
+                                    st.write(f"**Issue**: {notification.get('title', 'Unknown Error')}")
+                                    st.write(f"**Details**: {notification.get('message', '')}")
+                                    if notification.get('action'):
+                                        st.write(f"**Suggested Action**: {notification.get('action')}")
                             
                             # Show what we can about the client brief for debugging
                             with st.expander("🔍 Debug: Client Brief Details"):
