@@ -1,12 +1,23 @@
 """
 Main entry point for the AI Media Planner application.
 """
-
+import os
 import streamlit as st
 from config.settings import config_manager
 from data.manager import DataManager
 from ui.components import MediaPlannerForm, FormatSelectionComponent, display_validation_summary
 
+# Add this at the top of main.py for debugging
+st.write("**Debug: Files in root directory:**")
+root_files = os.listdir(".")
+st.write(root_files)
+
+# Check specifically for your files
+rate_card_exists = os.path.exists("adzymic_rate_card.xlsx")
+site_list_exists = os.path.exists("APX Sitelist - Regional.xlsx")
+
+st.write(f"Rate card exists: {rate_card_exists}")
+st.write(f"Site list exists: {site_list_exists}")
 
 def main():
     """Main application entry point."""
