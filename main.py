@@ -2,10 +2,16 @@
 Main entry point for the AI Media Planner application.
 """
 import os
+import logging
 import streamlit as st
+
+# Set up logging
+logger = logging.getLogger(__name__)
 from config.settings import config_manager
 from data.manager import DataManager
-from ui.components import MediaPlannerForm, FormatSelectionComponent, display_validation_summary
+from ui.components import MediaPlannerForm, FormatSelectionComponent, PlanDisplayComponent, display_validation_summary
+from business_logic.media_plan_controller import MediaPlanController
+from models.data_models import ClientBrief
 
 # Add this at the top of main.py for debugging
 st.write("**Debug: Files in root directory:**")
@@ -202,11 +208,63 @@ def main():
         
         if ready_for_generation:
             st.success("✅ Ready for media plan generation!")
-            st.info("🚧 Plan generation will be implemented in subsequent tasks.")
             
             # Store validated data in session state for next steps
             st.session_state['validated_form_data'] = form_data
             st.session_state['validated_format_data'] = format_data
+            
+            # Generate AI-powered media plans
+            if st.button("🚀 Generate AI Media Plans", type="primary", use_container_width=True):
+                with st.spinner("🤖 AI is generating your media plans..."):
+                    try:
+                        # Initialize the media plan controller
+                        controller = MediaPlanController(data_manager)
+                        
+                        # Create client brief from form data
+                        client_brief = ClientBrief(
+                            brand_name=form_data['brand_name'],
+                            budget=form_data['budget'],
+                            country=form_data['country'],
+                            campaign_period=f"{form_data['start_date']} to {form_data['end_date']}",
+                            objective=form_data['objective'],
+                            planning_mode=form_data['planning_mode'],
+                            selected_formats=format_data.get('selected_formats') if form_data['planning_mode'] == 'Manual' else None
+                        )
+                        
+                        # Generate media plans
+                        plans = controller.generate_media_plans(client_brief)
+                        
+                        if plans:
+                            st.success(f"✅ Generated {len(plans)} media plan options!")
+                            
+                            # Store plans in session state
+                            st.session_state['generated_plans'] = plans
+                            st.session_state['client_brief'] = client_brief
+                            
+                            # Display the plans
+                            display_component = PlanDisplayComponent()
+                            display_component.render_plan_comparison(plans, client_brief)
+                            
+                        else:
+                            st.error("❌ Failed to generate media plans. Please try again or contact support.")
+                            
+                    except Exception as e:
+                        st.error(f"❌ Error generating plans: {str(e)}")
+                        logger.error(f"Plan generation error: {str(e)}")
+                        
+                        # Show helpful error information
+                        with st.expander("🔧 Troubleshooting Information"):
+                            st.write("**Possible causes:**")
+                            st.write("• OpenAI API key not configured or invalid")
+                            st.write("• Network connectivity issues")
+                            st.write("• Rate limiting from OpenAI API")
+                            st.write("• Invalid market data or format selection")
+                            st.write("")
+                            st.write("**Next steps:**")
+                            st.write("1. Check your OpenAI API key configuration")
+                            st.write("2. Verify your internet connection")
+                            st.write("3. Try again in a few minutes")
+                            st.write("4. Contact support if the issue persists")
     
     # Display current configuration (for development)
     with st.expander("System Information"):
