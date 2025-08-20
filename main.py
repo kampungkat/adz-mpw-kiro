@@ -12,6 +12,33 @@ st.write("**Debug: Files in root directory:**")
 root_files = os.listdir(".")
 st.write(root_files)
 
+st.write("**Debug: Detailed file validation:**")
+
+try:
+    data_manager = DataManager()
+    validation_result = data_manager.validate_data_freshness()
+    
+    st.write("Validation result:", validation_result)
+    
+    # Try to load each file individually
+    st.write("**Testing rate card loading:**")
+    try:
+        rate_data = data_manager.load_rate_cards()
+        st.success(f"✅ Rate card loaded successfully! Found {len(rate_data.get('markets', []))} markets")
+    except Exception as e:
+        st.error(f"❌ Rate card loading failed: {str(e)}")
+    
+    st.write("**Testing site list loading:**")
+    try:
+        site_data = data_manager.load_site_lists()
+        st.success(f"✅ Site list loaded successfully! Found {len(site_data.get('markets', {}))} markets")
+    except Exception as e:
+        st.error(f"❌ Site list loading failed: {str(e)}")
+        
+except Exception as e:
+    st.error(f"DataManager initialization failed: {str(e)}")
+
+
 # Check specifically for your files
 rate_card_exists = os.path.exists("adzymic_rate_card.xlsx")
 site_list_exists = os.path.exists("APX Sitelist - Regional.xlsx")
